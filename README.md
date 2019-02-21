@@ -109,7 +109,9 @@ app.use(cors())
 
 // respond to the manifest request
 app.get('/:imdbUser/manifest.json', (req, res) => {
-    res.send(manifest)
+  res.setHeader('Cache-Control', 'max-age=604800') // one week
+  res.setHeader('Content-Type', 'application/json')
+  res.send(manifest)
 })
 ```
 
@@ -253,9 +255,11 @@ app.get('/:imdbUser/catalog/:type/:id.json', (req, res) => {
     // use function from previous step
     // to get list items from user id
     getList(req.params.type, req.params.imdbUser, (err, resp) => {
-      if (resp)
+      if (resp) {
+        res.setHeader('Cache-Control', 'max-age=86400') // one day
+        res.setHeader('Content-Type', 'application/json')
         res.send(resp)
-      else 
+      } else 
         fail(err)
     })
   } else
