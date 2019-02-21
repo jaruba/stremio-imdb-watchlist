@@ -33,20 +33,20 @@ Presuming that the user profile page you want to add is `https://www.imdb.com/us
 
 ```json
 {
-	"name": "stremio-imdb-watchlist",
-	"version": "0.0.1",
-	"description": "Add-on to create a catalog of your IMDB user watchlist.",
-	"main": "index.js",
-	"scripts": {
-		"start": "node index.js"
-	},
-	"dependencies": {
-		"needle": "^2.2.4",
-		"cheerio": "1.0.0-rc.2",
-		"express": "^4.16.4",
-		"cors": "^2.8.5",
-		"named-queue": "^2.2.1"
-	}
+  "name": "stremio-imdb-watchlist",
+  "version": "0.0.1",
+  "description": "Add-on to create a catalog of your IMDB user watchlist.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "needle": "^2.2.4",
+    "cheerio": "1.0.0-rc.2",
+    "express": "^4.16.4",
+    "cors": "^2.8.5",
+    "named-queue": "^2.2.1"
+  }
 }
 ```
 
@@ -61,41 +61,41 @@ Create an `index.js` file:
 ```javascript
 const manifest = {
 
-	// set add-on id, any string unique between add-ons
-	id: 'org.imdbwatchlist',
+  // set add-on id, any string unique between add-ons
+  id: 'org.imdbwatchlist',
 
-	// setting a semver add-on version is mandatory
-	version: '0.0.1',
+  // setting a semver add-on version is mandatory
+  version: '0.0.1',
 
-	// human readable add-on name
-	name: 'IMDB Watchlist Add-on',
+  // human readable add-on name
+  name: 'IMDB Watchlist Add-on',
 
-	// description of the add-on
-	name: 'Add-on to create a catalog of your IMDB user watchlist.',
+  // description of the add-on
+  name: 'Add-on to create a catalog of your IMDB user watchlist.',
 
-	// we only need 'catalog' for this add-on, can also be 'meta', 'stream' and 'subtitles'
-	resources: ['catalog'],
+  // we only need 'catalog' for this add-on, can also be 'meta', 'stream' and 'subtitles'
+  resources: ['catalog'],
 
-	// we set the add-on types, can also be 'tv', 'channel' and 'other'
-	types: ['movie', 'series'],
+  // we set the add-on types, can also be 'tv', 'channel' and 'other'
+  types: ['movie', 'series'],
 
-	// we define our catalogs, we'll make one for 'movies' and one for 'series'
-	catalogs: [
-		{
-			// id of catalog, any string unique between this add-ons catalogs
-			id: 'imdb-movie-watchlist',
+  // we define our catalogs, we'll make one for 'movies' and one for 'series'
+  catalogs: [
+    {
+      // id of catalog, any string unique between this add-ons catalogs
+      id: 'imdb-movie-watchlist',
 
-			// human readable catalog name
-			name: 'IMDB Movie Watchlist',
+      // human readable catalog name
+      name: 'IMDB Movie Watchlist',
 
-			// the type of this catalog provides
-			type: 'movie'
-		}, {
-			id: 'imdb-series-watchlist',
-			name: 'IMDB Series Watchlist',
-			type: 'series'
-		}
-	]
+      // the type of this catalog provides
+      type: 'movie'
+    }, {
+      id: 'imdb-series-watchlist',
+      name: 'IMDB Series Watchlist',
+      type: 'series'
+    }
+  ]
 }
 
 
@@ -127,7 +127,7 @@ const cheerio = require('cheerio')
 
 // set request headers to have Chrome Android user agent
 const headers = {
-	'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; TA-1053 Build/OPR1.170623.026) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3368.0 Mobile Safari/537.36',
+  'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; TA-1053 Build/OPR1.170623.026) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3368.0 Mobile Safari/537.36',
 }
 
 // object to cache our watchlist ID based on user ID
@@ -136,53 +136,53 @@ const cacheLists = {}
 // function to get list id from user id
 function getListId(userId, cb) {
 
-	// check if it's in cache first
-	if (cacheLists[userId]) {
-		cb(false, cacheLists[userId])
-		return
-	}
+  // check if it's in cache first
+  if (cacheLists[userId]) {
+    cb(false, cacheLists[userId])
+    return
+  }
 
-	// set request referer to the user page of the user id
-	headers.referer = 'https://m.imdb.com/user/'+userId+'/'
+  // set request referer to the user page of the user id
+  headers.referer = 'https://m.imdb.com/user/'+userId+'/'
 
-	// set request url, in this case, the watchlist page of the user
-	const getUrl = 'https://m.imdb.com/user/'+userId+'/watchlist/'
+  // set request url, in this case, the watchlist page of the user
+  const getUrl = 'https://m.imdb.com/user/'+userId+'/watchlist/'
 
-	// send request
-	needle.get(getUrl, { headers }, (err, resp) => {
-		if (!err && resp && resp.body) {
+  // send request
+  needle.get(getUrl, { headers }, (err, resp) => {
+    if (!err && resp && resp.body) {
 
-			// load jQuery instance from the HTML page
-			const $ = cheerio.load(resp.body)
+      // load jQuery instance from the HTML page
+      const $ = cheerio.load(resp.body)
 
-			const listMeta = $('meta[property="pageId"]')
+      const listMeta = $('meta[property="pageId"]')
 
-			// check to see if the needed HTML element exists
-			if (!listMeta || listMeta.length != 1) {
-				cb('Error parsing page #1')
-				return
-			}
+      // check to see if the needed HTML element exists
+      if (!listMeta || listMeta.length != 1) {
+        cb('Error parsing page #1')
+        return
+      }
 
-			// get list id from page
-			const listId = listMeta.attr('content')
+      // get list id from page
+      const listId = listMeta.attr('content')
 
-			// check list id for sanity
-			if (!listId || !listId.startsWith('ls')) {
-				cb('Error parsing page #2')
-				return
-			}
+      // check list id for sanity
+      if (!listId || !listId.startsWith('ls')) {
+        cb('Error parsing page #2')
+        return
+      }
 
-			// cache list id
-			cacheLists[userId] = listId
+      // cache list id
+      cacheLists[userId] = listId
 
-			// respond with the list id
-			cb(false, listId)
+      // respond with the list id
+      cb(false, listId)
 
-		} else {
-			// respond with error
-			cb(err || 'Empty html body when requesting list id')
-		}
-	})
+    } else {
+      // respond with error
+      cb(err || 'Empty html body when requesting list id')
+    }
+  })
 }
 ```
 
@@ -197,38 +197,38 @@ We won't handle converting IMDB items to Stremio Meta Objects in this guide, we 
 const namedQueue = require('named-queue')
 
 const queue = new namedQueue((task, cb) => {
-	// get the list id from user id with the
-	// function from the previous step
-	getListId(task.id, cb)
+  // get the list id from user id with the
+  // function from the previous step
+  getListId(task.id, cb)
 }, Infinity)
 
 // where the secondary add-on is hosted
 const listEndpoint = 'https://stremio-imdb-list.now.sh/'
 
 function getList(type, userId, cb) {
-	queue.push({ id: userId }, (listErr, listId) => {
-		if (listId) {
-			// list id is correct, let's request the
-			// list contents from the secondary add-on
-			const getUrl = listEndpoint + listId + '/catalog/' + type + '/imdb-' + type + '-list.json'
-			needle.get(getUrl, { headers }, (err, resp) => {
-				if (err) {
-					// failed, send error
-					cb(err)
-				} else if (!resp || !resp.body) {
-					// failed, send error
-					cb('Empty list response from endpoint')
-				}
-				else {
-					// success, return result
-					cb(false, resp.body)
-				}
-			})
-		} else {
-			// request failed, send error
-			cb(listErr || 'Could not get watchlist id')
-		}
-	})
+  queue.push({ id: userId }, (listErr, listId) => {
+    if (listId) {
+      // list id is correct, let's request the
+      // list contents from the secondary add-on
+      const getUrl = listEndpoint + listId + '/catalog/' + type + '/imdb-' + type + '-list.json'
+      needle.get(getUrl, { headers }, (err, resp) => {
+        if (err) {
+          // failed, send error
+          cb(err)
+        } else if (!resp || !resp.body) {
+          // failed, send error
+          cb('Empty list response from endpoint')
+        }
+        else {
+          // success, return result
+          cb(false, resp.body)
+        }
+      })
+    } else {
+      // request failed, send error
+      cb(listErr || 'Could not get watchlist id')
+    }
+  })
 }
 ```
 
@@ -241,25 +241,25 @@ We create the catalog handler, get the user id from the user as it's part of the
 // this will be available as `req.params.imdbUser`
 app.get('/:imdbUser/catalog/:type/:id.json', (req, res) => {
 
-	// handle failures
-	function fail(err) {
-		console.error(err)
-		res.writeHead(500)
-		res.end(JSON.stringify({ err: 'handler error' }))
-	}
+  // handle failures
+  function fail(err) {
+    console.error(err)
+    res.writeHead(500)
+    res.end(JSON.stringify({ err: 'handler error' }))
+  }
 
-	// ensure request parameters are known
-	if (req.params.imdbUser && ['movie','series'].indexOf(req.params.type) > -1) {
-		// use function from previous step
-		// to get list items from user id
-		getList(req.params.type, req.params.imdbUser, (err, resp) => {
-			if (resp)
-				res.send(resp)
-			else 
-				fail(err)
-		})
-	} else
-		fail('Unknown request parameters')
+  // ensure request parameters are known
+  if (req.params.imdbUser && ['movie','series'].indexOf(req.params.type) > -1) {
+    // use function from previous step
+    // to get list items from user id
+    getList(req.params.type, req.params.imdbUser, (err, resp) => {
+      if (resp)
+        res.send(resp)
+      else 
+        fail(err)
+    })
+  } else
+    fail('Unknown request parameters')
 })
 
 ```
