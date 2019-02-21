@@ -14,12 +14,12 @@ npm i
 npm start
 ```
 
-This will print `http://127.0.0.1:7505/[imdb-user-id]/manifest.json`. Add a IMDB list id instead of `[imdb-user-id]` in this URL and load the add-on in Stremio.
+This will print `http://127.0.0.1:7505/[imdb-user-id]/manifest.json`. Add a IMDB list id instead of `[imdb-user-id]` in this URL and [load the add-on in Stremio](https://github.com/jaruba/stremio-imdb-watchlist#7-install-add-on-in-stremio).
 
 
 ## Using remotely
 
-Use `https://stremio-imdb-watchlist.now.sh/[imdb-user-id]/manifest.json`. Add a IMDB list id instead of `[imdb-user-id]` in this URL and load the add-on in Stremio.
+Use `https://stremio-imdb-watchlist.now.sh/[imdb-user-id]/manifest.json`. Add a IMDB list id instead of `[imdb-user-id]` in this URL and [load the add-on in Stremio](https://github.com/jaruba/stremio-imdb-watchlist#7-install-add-on-in-stremio).
 
 
 ## What is a IMDB List ID
