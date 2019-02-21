@@ -8,7 +8,8 @@ app.use(cors())
 const manifest = {
 	id: 'org.imdbwatchlist',
 	version: '0.0.1',
-	name: 'Add-on to create a catalog of a IMDB user watchlist.',
+	name: 'IMDB Watchlist Add-on',
+	description: 'Add-on to create a catalog of a IMDB user watchlist.',
 	resources: ['catalog'],
 	types: ['movie', 'series'],
 	catalogs: [
