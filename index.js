@@ -113,7 +113,7 @@ const listEndpoint = 'https://stremio-imdb-list.now.sh/'
 function getList(type, userId, cb) {
 	queue.push({ id: userId }, (listErr, listId) => {
 		if (listId) {
-			const getUrl = listEndpoint + listId + '/catalog/' + type + '/imdb-' + type + '-list.json'
+			const getUrl = listEndpoint + listId + '/date_added/catalog/' + type + '/imdb-' + type + '-list.json'
 			needle.get(getUrl, { headers }, (err, resp) => {
 				if (err)
 					cb(err)
