@@ -28,8 +28,13 @@ const manifest = {
 const listManifest = {}
 
 app.get('/:imdbUser/manifest.json', (req, res) => {
+	function respond(msd) {
+		res.setHeader('Cache-Control', 'max-age=604800') // one week
+		res.setHeader('Content-Type', 'application/json')
+		res.send(msg)
+	}
 	if (listManifest[req.params.imdbUser]) {
-		res.send(listManifest[req.params.imdbUser])
+		respond(listManifest[req.params.imdbUser])
 		return
 	}
 	queue.push({ id: req.params.imdbUser }, (listErr, listId) => {
@@ -37,9 +42,9 @@ app.get('/:imdbUser/manifest.json', (req, res) => {
 			const getUrl = listEndpoint + listId + '/manifest.json'
 			needle.get(getUrl, { headers }, (err, resp) => {
 				if (err)
-					res.send(manifest)
+					respond(manifest)
 				else if (!resp || !resp.body || !resp.body.name || resp.body.name == 'IMDB List Add-on')
-					res.send(manifest)
+					respond(manifest)
 				else {
 					const cloneManifest = JSON.parse(JSON.stringify(manifest))
 					cloneManifest.id = 'org.imdbwatchlist' + req.params.imdbUser
@@ -48,11 +53,11 @@ app.get('/:imdbUser/manifest.json', (req, res) => {
 						cloneManifest.catalogs[ij].name = resp.body.name
 					})
 					listManifest[req.params.imdbUser] = cloneManifest
-					res.send(cloneManifest)
+					respond(cloneManifest)
 				}
 			})
 		} else
-			res.send(manifest)
+			respond(manifest)
 	})
 })
 
@@ -135,9 +140,11 @@ app.get('/:imdbUser/catalog/:type/:id.json', (req, res) => {
 	}
 	if (req.params.imdbUser && ['movie','series'].indexOf(req.params.type) > -1)
 		getList(req.params.type, req.params.imdbUser, (err, resp) => {
-			if (resp)
+			if (resp) {
+				res.setHeader('Cache-Control', 'max-age=86400') // one day
+				res.setHeader('Content-Type', 'application/json')
 				res.send(resp)
-			else 
+			} else 
 				fail(err)
 		})
 	else
