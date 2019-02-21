@@ -71,7 +71,7 @@ const manifest = {
   name: 'IMDB Watchlist Add-on',
 
   // description of the add-on
-  name: 'Add-on to create a catalog of your IMDB user watchlist.',
+  description: 'Add-on to create a catalog of your IMDB user watchlist.',
 
   // we only need 'catalog' for this add-on, can also be 'meta', 'stream' and 'subtitles'
   resources: ['catalog'],
