@@ -24,8 +24,35 @@ const manifest = {
 	]
 }
 
+const listManifest = {}
+
 app.get('/:imdbUser/manifest.json', (req, res) => {
-    res.send(manifest)
+	if (listManifest[req.params.imdbUser]) {
+		res.send(listManifest[req.params.imdbUser])
+		return
+	}
+	queue.push({ id: req.params.imdbUser }, (listErr, listId) => {
+		if (listId) {
+			const getUrl = listEndpoint + listId + '/manifest.json'
+			needle.get(getUrl, { headers }, (err, resp) => {
+				if (err)
+					res.send(manifest)
+				else if (!resp || !resp.body || !resp.body.name || resp.body.name == 'IMDB List Add-on')
+					res.send(manifest)
+				else {
+					const cloneManifest = JSON.parse(JSON.stringify(manifest))
+					cloneManifest.id = 'org.imdbwatchlist' + req.params.imdbUser
+					cloneManifest.name = resp.body.name
+					cloneManifest.catalogs.forEach((cat, ij) => {
+						cloneManifest.catalogs[ij].name = resp.body.name
+					})
+					listManifest[req.params.imdbUser] = cloneManifest
+					res.send(cloneManifest)
+				}
+			})
+		} else
+			res.send(manifest)
+	})
 })
 
 const needle = require('needle')
