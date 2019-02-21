@@ -210,7 +210,7 @@ function getList(type, userId, cb) {
     if (listId) {
       // list id is correct, let's request the
       // list contents from the secondary add-on
-      const getUrl = listEndpoint + listId + '/catalog/' + type + '/imdb-' + type + '-list.json'
+      const getUrl = listEndpoint + listId + '/date_added/catalog/' + type + '/imdb-' + type + '-list.json'
       needle.get(getUrl, { headers }, (err, resp) => {
         if (err) {
           // failed, send error
