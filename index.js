@@ -1,7 +1,10 @@
+
 const express = require('express')
 const app = express()
 const cors = require('cors')
+
 app.use(cors())
+
 const manifest = {
 	id: 'org.imdbwatchlist',
 	version: '0.0.2',
@@ -25,7 +28,9 @@ const manifest = {
 		}
 	]
 }
+
 const listManifest = {}
+
 app.get('/:imdbUser/manifest.json', (req, res) => {
 	function respond(msg) {
 		res.setHeader('Cache-Control', 'max-age=604800, public') // one week
@@ -59,12 +64,14 @@ app.get('/:imdbUser/manifest.json', (req, res) => {
 			respond(manifest)
 	})
 })
+
 const needle = require('needle')
 const cheerio = require('cheerio')
 const headers = {
 	'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; TA-1053 Build/OPR1.170623.026) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3368.0 Mobile Safari/537.36',
 }
 const cacheLists = {}
+
 function getListId(userId, cb) {
 	if (cacheLists[userId]) {
 		cb(false, cacheLists[userId])
@@ -91,11 +98,15 @@ function getListId(userId, cb) {
 			cb(err || 'Empty html body when requesting list id')
 	})
 }
+
 const namedQueue = require('named-queue')
+
 const queue = new namedQueue((task, cb) => {
 	getListId(task.id, cb)
 }, Infinity)
+
 const listEndpoint = 'https://imdb-list.now.sh/'
+
 function getList(type, userId, extra, cb) {
 	queue.push({ id: userId }, (listErr, listId) => {
 		if (listId) {
@@ -112,6 +123,7 @@ function getList(type, userId, extra, cb) {
 			cb(listErr || 'Could not get watchlist id')
 	})
 }
+
 app.get('/:imdbUser/catalog/:type/:id/:extra?.json', (req, res) => {
 	function fail(err) {
 		console.error(err)
@@ -130,4 +142,5 @@ app.get('/:imdbUser/catalog/:type/:id/:extra?.json', (req, res) => {
 	} else
 		fail('Unknown request parameters')
 })
+
 module.exports = app
