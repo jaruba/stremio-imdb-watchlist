@@ -2,9 +2,9 @@
 	"name": "stremio-imdb-watchlist",
 	"version": "0.0.1",
 	"description": "Add-on to create a catalog of a IMDB user watchlist.",
-	"main": "index.js",
+	"main": "server.js",
 	"scripts": {
-		"start": "node index.js"
+		"start": "node server.js"
 	},
 	"dependencies": {
 		"needle": "^2.2.4",
