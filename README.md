@@ -19,7 +19,7 @@ This will print `http://127.0.0.1:7505/[imdb-user-id]/manifest.json`. Add a IMDB
 
 ## Using remotely
 
-Use `https://stremio-imdb-watchlist.now.sh/[imdb-user-id]/manifest.json`. Add a IMDB list id instead of `[imdb-user-id]` in this URL and [load the add-on in Stremio](https://github.com/jaruba/stremio-imdb-watchlist#7-install-add-on-in-stremio).
+Use `https://imdb-watchlist.baby-supernode.xyz/[imdb-user-id]/manifest.json`. Add a IMDB list id instead of `[imdb-user-id]` in this URL and [load the add-on in Stremio](https://github.com/jaruba/stremio-imdb-watchlist#7-install-add-on-in-stremio).
 
 
 ## What is a IMDB List ID
@@ -205,7 +205,7 @@ const queue = new namedQueue((task, cb) => {
 }, Infinity)
 
 // where the secondary add-on is hosted
-const listEndpoint = 'https://stremio-imdb-list.now.sh/'
+const listEndpoint = 'https://imdb-list.baby-supernode.xyz/'
 
 function getList(type, userId, cb) {
   queue.push({ id: userId }, (listErr, listId) => {
