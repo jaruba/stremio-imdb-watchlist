@@ -105,7 +105,7 @@ const queue = new namedQueue((task, cb) => {
 	getListId(task.id, cb)
 }, Infinity)
 
-const listEndpoint = 'https://imdb-list.now.sh/'
+const listEndpoint = 'https://1fe84bc728af-imdb-list.beamup.dev/'
 
 function getList(type, userId, extra, cb) {
 	queue.push({ id: userId }, (listErr, listId) => {
